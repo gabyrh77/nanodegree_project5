@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 public class ImageLoaderHelper {
     private static ImageLoaderHelper sInstance;
 
-    public static ImageLoaderHelper getInstance(Context context) {
+    public static synchronized ImageLoaderHelper getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new ImageLoaderHelper(context.getApplicationContext());
         }

@@ -18,7 +18,7 @@ public class ItemsDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + Tables.ITEMS + " ("
                 + ItemsContract.ItemsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + ItemsContract.ItemsColumns.SERVER_ID + " TEXT,"
+                + ItemsContract.ItemsColumns.SERVER_ID + " TEXT UNIQUE,"
                 + ItemsContract.ItemsColumns.TITLE + " TEXT NOT NULL,"
                 + ItemsContract.ItemsColumns.AUTHOR + " TEXT NOT NULL,"
                 + ItemsContract.ItemsColumns.BODY + " TEXT NOT NULL,"

@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -140,4 +141,32 @@ public class ItemsProvider extends ContentProvider {
             db.endTransaction();
         }
     }
+
+	public int bulkInsert(Uri uri, ContentValues[] values){
+		int numInserted = 0;
+		String table=null;
+		final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		int uriType = sUriMatcher.match(uri);
+
+		switch (uriType) {
+			case ITEMS:
+				table = Tables.ITEMS;
+				break;
+		}
+		db.beginTransaction();
+		try {
+			for (ContentValues cv : values) {
+				long newID = db.replace(table, null, cv);
+				if (newID <= 0) {
+					throw new SQLException("Failed to insert row into " + uri);
+				}
+			}
+			db.setTransactionSuccessful();
+			getContext().getContentResolver().notifyChange(uri, null);
+			numInserted = values.length;
+		} finally {
+			db.endTransaction();
+		}
+		return numInserted;
+	}
 }

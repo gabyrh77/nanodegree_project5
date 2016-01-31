@@ -16,6 +16,7 @@
 -->
 
 <resources>
+    <color name="background_transparent">#cceeeeee</color>
     <color name="photo_placeholder">#ccc</color>
 
     <color name="theme_primary">#F45320</color>

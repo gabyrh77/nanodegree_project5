@@ -4,9 +4,12 @@
     <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
 
-    <dimen name="fab_elevation">2dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
     <dimen name="app_bar_height">116dp</dimen>
     <dimen name="app_bar_height_detail">280dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="small_margin">4dp</dimen>
+    <dimen name="list_thumbnail_image_size">100dp</dimen>
+
 </resources>

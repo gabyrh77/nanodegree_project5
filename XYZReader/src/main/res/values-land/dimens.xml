@@ -1,3 +1,4 @@
 <resources>
-    <dimen name="app_bar_height_detail">200dp</dimen>
+    <dimen name="app_bar_height_detail">220dp</dimen>
+    <dimen name="activity_horizontal_margin">24dp</dimen>
 </resources>

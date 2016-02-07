@@ -25,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.bumptech.glide.Glide;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -59,8 +58,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        Log.i(LOG_TAG, "onRefresh called from SwipeRefreshLayout");
-
                         refresh();
                     }
                 }
@@ -73,7 +70,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         LocalBroadcastManager.getInstance(this).registerReceiver(mRefreshingReceiver, filter);
 
         if (savedInstanceState == null) {
-            Log.i(LOG_TAG, "onRefresh called from onCreate");
             mSwipeRefreshLayout.setRefreshing(true);
             refresh();
         }
@@ -95,7 +91,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mSwipeRefreshLayout.setRefreshing(false);
                 int state = intent.getIntExtra(UpdaterService.EXTRA_STATE, 0);
-                Log.d(LOG_TAG, "calling receiver with status: " + state);
                 switch (state){
                     case UpdaterService.STATUS_ERROR:
                         Snackbar.make(mCoordinatorLayout, R.string.text_error, Snackbar.LENGTH_LONG)
@@ -149,7 +144,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private Cursor mCursor;
-    private ImageLoader mImageLoader;
         public Adapter(Cursor cursor) {
             mCursor = cursor;
         }
@@ -188,13 +182,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         public void onBindViewHolder(ViewHolder holder, int position) {
             mCursor.moveToPosition(position);
             holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
-            holder.subtitleView.setText(
-                    DateUtils.getRelativeTimeSpanString(
-                            mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
-                            System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                            DateUtils.FORMAT_ABBREV_ALL).toString()
-                            + " by "
-                            + mCursor.getString(ArticleLoader.Query.AUTHOR));
+            holder.subtitleView.setText(getString(R.string.text_date_author,
+                                            DateUtils.getRelativeTimeSpanString(
+                                                    mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
+                                                    System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
+                                                    DateUtils.FORMAT_ABBREV_ALL).toString(),
+                                            mCursor.getString(ArticleLoader.Query.AUTHOR)));
             Glide.with(ArticleListActivity.this).load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).into(holder.thumbnailView);
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
         }

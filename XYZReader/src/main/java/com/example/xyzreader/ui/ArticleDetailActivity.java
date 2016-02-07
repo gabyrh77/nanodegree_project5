@@ -52,7 +52,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
         mByLineView.setMovementMethod(new LinkMovementMethod());
         mBodyView = (TextView) findViewById(R.id.article_body);
         mBarView = findViewById(R.id.meta_bar);
-        mBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        mBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), getString(R.string.type_string)));
         mShareButton = (FloatingActionButton) findViewById(R.id.share_fab);
         mPhotoView = (ImageView) findViewById(R.id.photo);
         setSupportActionBar(mToolbar);
@@ -101,8 +101,9 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
                     DateUtils.getRelativeTimeSpanString(
                             cursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
                             System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                            DateUtils.FORMAT_ABBREV_ALL).toString()
-                            + " by <font color='#ffffff'>"
+                            DateUtils.FORMAT_ABBREV_ALL).toString() + " " +
+                            getString(R.string.text_by)
+                            + " <font color='#ffffff'>"
                             + author
                             + "</font>"));
             mBodyView.setText(Html.fromHtml(cursor.getString(ArticleLoader.Query.BODY)));

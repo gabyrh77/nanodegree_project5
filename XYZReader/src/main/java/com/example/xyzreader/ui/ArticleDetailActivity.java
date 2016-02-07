@@ -7,7 +7,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
     private TextView mBodyView;
     private ImageView mPhotoView;
     private Toolbar mToolbar;
+    private AppBarLayout mAppbar;
     private View mScrollView;
     private View mBarView;
 
@@ -52,6 +56,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
         mByLineView.setMovementMethod(new LinkMovementMethod());
         mBodyView = (TextView) findViewById(R.id.article_body);
         mBarView = findViewById(R.id.meta_bar);
+        mAppbar = (AppBarLayout) findViewById(R.id.app_bar);
         mBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), getString(R.string.type_string)));
         mShareButton = (FloatingActionButton) findViewById(R.id.share_fab);
         mPhotoView = (ImageView) findViewById(R.id.photo);
@@ -96,6 +101,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
         if (cursor != null && cursor.moveToFirst()) {
             final String title = cursor.getString(ArticleLoader.Query.TITLE);
             final String author = cursor.getString(ArticleLoader.Query.AUTHOR);
+            final float aspectRadio = cursor.getFloat(ArticleLoader.Query.ASPECT_RATIO);
             mTitleView.setText(title);
             mByLineView.setText(Html.fromHtml(
                     DateUtils.getRelativeTimeSpanString(
@@ -125,6 +131,18 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
                     final int newbarSize = mBarView.getHeight();
                     CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) mToolbar.getLayoutParams();
                     layoutParams.height = newbarSize;
+                    if (aspectRadio<1){
+                        int height = mAppbar.getHeight();
+                        TypedValue outValue = new TypedValue();
+                        getResources().getValue(R.dimen.aspect_radio_factor, outValue, true);
+                        float factorValue = outValue.getFloat();
+                        height = (int)(height * factorValue);
+                        CoordinatorLayout.LayoutParams appLayoutParams = (CoordinatorLayout.LayoutParams) mAppbar.getLayoutParams();
+                        appLayoutParams.height = height;
+                        mAppbar.setLayoutParams(appLayoutParams);
+                        mAppbar.requestLayout();
+                    }
+
                     mScrollView.setPadding(0, 0, 0, layoutParams.height);
                     mToolbar.setLayoutParams(layoutParams);
                     mToolbar.requestLayout();
